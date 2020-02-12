@@ -33,9 +33,9 @@ var legacySeedToKeyCmd = &cobra.Command{
 	after March 2018.  In specific, the salt that was used was changed, so if upgrading
 	an account generated before that, the seed phrase would create a different wallet
 	account and funds would not be accessible.`,
-	Args: cobra.MinimumNArgs(1),
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		legacyFunc(args[0])
+		legacyFunc(args[0], args[1])
 	},
 }
 
@@ -53,12 +53,12 @@ func init() {
 	// legacySeedToKeyCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func legacyFunc(rawSeed string) {
+func legacyFunc(rawSeed string, password string) {
 	// trim whitespace
 	seedPhrase := strings.TrimSpace(rawSeed)
 	// convert the seed phrase to a private key
 	mn := extkeys.NewMnemonic("")
-	masterKey, err := extkeys.NewMaster(mn.MnemonicSeed(seedPhrase, ""), []byte(extkeys.Salt))
+	masterKey, err := extkeys.NewMaster(mn.MnemonicSeed(seedPhrase, password), []byte(extkeys.Salt))
 	if err != nil {
 		fmt.Printf("cannot create master extended key: %v\n", err)
 		os.Exit(1)
