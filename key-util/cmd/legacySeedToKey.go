@@ -78,6 +78,6 @@ func legacyFunc(rawSeed string, password string) {
 
 	// print legacy private key of m/44'/60'/0'/0'/0'
 	fmt.Printf("private: %#x\n", crypto.FromECDSA(walletKey))
-	fmt.Printf("public:  %x\n", walletPubKeyBytes)
+	fmt.Printf("public:  %#x\n", walletPubKeyBytes)
 	fmt.Printf("address: %+v\n\n", address)
 }
