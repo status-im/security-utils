@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"crypto/ecdsa"
 	"fmt"
 	"os"
 	"strings"
@@ -70,6 +71,13 @@ func legacyFunc(rawSeed string, password string) {
 		fmt.Printf("cannot extract chat key from master key: %v\n", err)
 		os.Exit(1)
 	}
+	walletKey := walletExtKey.ToECDSA()
+	walletPubKey := walletKey.Public().(*ecdsa.PublicKey)
+	walletPubKeyBytes := crypto.FromECDSAPub(walletPubKey)
+	address := crypto.PubkeyToAddress(walletKey.PublicKey).Hex()
+
 	// print legacy private key of m/44'/60'/0'/0'/0'
-	fmt.Printf("%#x\n", crypto.FromECDSA(walletExtKey.ToECDSA()))
+	fmt.Printf("private: %#x\n", crypto.FromECDSA(walletKey))
+	fmt.Printf("public:  %x\n", walletPubKeyBytes)
+	fmt.Printf("address: %+v\n\n", address)
 }
