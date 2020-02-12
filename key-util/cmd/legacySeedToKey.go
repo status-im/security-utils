@@ -64,12 +64,12 @@ func legacyFunc(rawSeed string) {
 		os.Exit(1)
 	}
 
-	walletExtKey, err := masterKey.BIP44Child(60, 1)
+	walletExtKey, err := masterKey.BIP44Child(60, 0)
 	// walletKey, err := walletExtKey.Child(1)
 	if err != nil {
 		fmt.Printf("cannot extract chat key from master key: %v\n", err)
 		os.Exit(1)
 	}
-	// print legacy private key of m/44'/60'/0'/0'/1'
+	// print legacy private key of m/44'/60'/0'/0'/0'
 	fmt.Printf("%#x\n", crypto.FromECDSA(walletExtKey.ToECDSA()))
 }
