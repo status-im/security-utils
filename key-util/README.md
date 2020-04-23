@@ -22,5 +22,11 @@ usage:
   - \<seedphrase\> (string): user's seed phrase.
   - \<password\> (string): user's BIP39 passphrase.  For legacy Status accounts, this was the account password.
 
+### seedToStatusRandomName
+TODO
+
+### pubkeyToEthAddress
+TODO
+
 ## Contributing
 The CLI was built using [cobra](https://github.com/spf13/cobra) so follow its command line arguments for adding functionality.

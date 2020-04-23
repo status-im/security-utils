@@ -59,6 +59,12 @@ func legacyFunc(rawSeed string, password string) {
 	seedPhrase := strings.TrimSpace(rawSeed)
 	// convert the seed phrase to a private key
 	mn := extkeys.NewMnemonic("")
+	// check validity of given mnemonic
+	isValid := mn.ValidMnemonic(seedPhrase, 0)
+	if !isValid {
+		fmt.Printf("seedphrase has an error, please verify all information is spelled correctly.")
+	}
+
 	masterKey, err := extkeys.NewMaster(mn.MnemonicSeed(seedPhrase, password), []byte(extkeys.Salt))
 	if err != nil {
 		fmt.Printf("cannot create master extended key: %v\n", err)
