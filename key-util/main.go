@@ -16,6 +16,7 @@ import (
 
 const preferenceCurrentTab = "currentTab"
 
+// Parses a given string for a URL and returns it
 func parseURL(urlStr string) *url.URL {
 	link, err := url.Parse(urlStr)
 	if err != nil {

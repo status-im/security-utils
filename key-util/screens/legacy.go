@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"math/rand"
+	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -19,14 +20,16 @@ import (
 
 // KEYINFO is a struct that contains all derived info from a seedphrase and password
 type KEYINFO struct {
-	Private string `json:"private"`
-	Public  string `json:"public"`
-	Address string `json:"address"`
+	Private   string `json:"private"`
+	Public    string `json:"public"`
+	Address   string `json:"address"`
+	Etherscan string `json:"etherscan"`
 
 	seedEntry     *widget.Entry
 	passwordEntry *widget.Entry
 
-	labels map[string]*widget.Label
+	hyperlinks map[string]*widget.Hyperlink
+	labels     map[string]*widget.Label
 }
 
 func (k *KEYINFO) newLabel(name string) *widget.Label {
@@ -35,11 +38,28 @@ func (k *KEYINFO) newLabel(name string) *widget.Label {
 	return w
 }
 
+func (k *KEYINFO) newHyperlink(name string) *widget.Hyperlink {
+	w := widget.NewHyperlink("", parseURL("https://google.com"))
+	k.hyperlinks[name] = w
+	return w
+}
+
+// Parses a given string for a URL and returns it
+func parseURL(urlStr string) *url.URL {
+	link, err := url.Parse(urlStr)
+	if err != nil {
+		fyne.LogError("Could not parse URL", err)
+	}
+
+	return link
+}
+
 // NewKEYINFO returns a new keyinfo
 func NewKEYINFO() *KEYINFO {
 	rand.Seed(time.Now().UnixNano())
 	return &KEYINFO{
-		labels: make(map[string]*widget.Label),
+		labels:     make(map[string]*widget.Label),
+		hyperlinks: make(map[string]*widget.Hyperlink),
 	}
 }
 
@@ -75,6 +95,9 @@ func (k *KEYINFO) processSeedAndPass() {
 	k.labels["private"].SetText("0x" + walletPrivKeyString)
 	k.labels["public"].SetText("0x" + walletPubKeyString)
 	k.labels["address"].SetText(address)
+
+	k.hyperlinks["etherscan"].SetText("Check it on Etherscan")
+	k.hyperlinks["etherscan"].SetURL(parseURL("https://etherscan.io/address/" + address))
 }
 
 // Submit will derive keys and derivative information
@@ -97,9 +120,15 @@ func makeFormTab(k *KEYINFO) fyne.Widget {
 	}
 	form.Append("Seedphrase", k.seedEntry)
 	form.Append("Password", k.passwordEntry)
+
 	form.Append("Private Key", k.newLabel("private"))
 	form.Append("Public Key", k.newLabel("public"))
 	form.Append("Address", k.newLabel("address"))
+
+	outputBox := widget.NewHScrollContainer(
+		k.newHyperlink("etherscan"),
+	)
+	form.Append("", outputBox)
 
 	return form
 }
