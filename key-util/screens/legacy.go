@@ -108,8 +108,9 @@ func makeFormTab(k *KEYINFO) fyne.Widget {
 func LegacyScreen() fyne.CanvasObject {
 	k := NewKEYINFO()
 	return fyne.NewContainerWithLayout(layout.NewBorderLayout(nil, nil, nil, nil),
-		widget.NewTabContainer(
-			widget.NewTabItem("Keys", makeFormTab(k)),
-		),
+		makeFormTab(k),
+		// widget.NewTabContainer(
+		// 	widget.NewTabItem("Keys", makeFormTab(k)),
+		// ),
 	)
 }
